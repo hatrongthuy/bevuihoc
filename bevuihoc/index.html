@@ -47,7 +47,8 @@ button:focus-visible{outline:4px solid var(--sea);outline-offset:3px}
 .voice{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:-4px 0 14px;font-weight:800;color:var(--mute);font-size:15px}
 .voice select{font:inherit;color:var(--ink);background:var(--paper);border:0;border-radius:999px;padding:8px 14px;box-shadow:0 4px 0 var(--line);max-width:100%}
 .voice small{flex-basis:100%;font-weight:700;max-width:65ch}
-.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;flex:1;min-height:0;align-content:start}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;flex:none;align-content:start}
+#home{overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(24px + env(safe-area-inset-bottom, 0px))}
 .tile{position:relative;border-radius:28px;padding:16px;text-align:left;display:flex;flex-direction:column;justify-content:space-between;gap:10px;min-height:150px;color:#fff;transition:transform .12s}
 .tile:active{transform:translateY(4px)}
 .tile h2{font-family:var(--display);font-weight:800;font-size:clamp(20px,4.2vw,30px);line-height:1.05;margin:0;text-wrap:balance}
@@ -61,7 +62,7 @@ button:focus-visible{outline:4px solid var(--sea);outline-offset:3px}
 .numart{font-family:var(--display);font-weight:800;font-size:54px;line-height:.9;letter-spacing:2px}
 .minicard{width:40px;height:54px;border-radius:9px;background:#fff;display:grid;place-items:center;font-size:26px;box-shadow:0 3px 0 rgba(0,0,0,.18)}
 .minicard.back{background:repeating-linear-gradient(45deg,#ffd76a 0 6px,#ffc83d 6px 12px)}
-details.tips{margin-top:16px;background:var(--paper);border-radius:20px;padding:12px 16px;box-shadow:0 4px 0 var(--line)}
+details.tips{flex:none;margin-top:18px;background:var(--paper);border-radius:20px;padding:12px 16px;box-shadow:0 4px 0 var(--line)}
 details.tips summary{font-weight:800;cursor:pointer}
 .tips ul{margin:10px 0 4px;padding-left:20px;display:grid;gap:6px;max-width:65ch;line-height:1.45}
 .tips li b{color:var(--ink)}
@@ -160,7 +161,7 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:6;width:100%;height
         <li><b>Lật thẻ trí nhớ:</b> trí nhớ làm việc và sự tập trung. Bàn chơi lớn dần sau mỗi lượt.</li>
         <li><b>Quy luật &amp; Khác biệt:</b> nền tảng của tư duy toán và suy luận. 5–6 tuổi có quy luật AAB, ABC và phân loại theo nhóm (con vật, hoa quả, xe cộ).</li>
       </ul>
-      <p>Mỗi lượt chơi chỉ 3–6 câu, khoảng 3–5 phút. Chơi cùng bé, hỏi “Vì sao con chọn hình này?” để bé tập diễn đạt. Trả lời sai không bị trừ điểm, bé được thử lại. Giọng đọc dùng giọng tiếng Việt có sẵn trên máy; nếu máy không có, bố mẹ đọc câu hỏi giúp bé.</p>
+      <p>Mỗi lượt chơi chỉ 3–6 câu, khoảng 3–5 phút. Chơi cùng bé, hỏi “Vì sao con chọn hình này?” để bé tập diễn đạt. Trả lời sai không bị trừ điểm, bé được thử lại. Bấm Đổi tên để nhập tên bé và ghi âm giọng bố mẹ gọi tên, game sẽ gọi bé bằng giọng đó. Vài câu chưa thu sẵn sẽ dùng giọng đọc của máy, chọn ở mục Giọng đọc.</p>
     </details>
   </section>
 
