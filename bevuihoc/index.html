@@ -66,6 +66,9 @@ button:focus-visible{outline:4px solid var(--sea);outline-offset:3px}
 .t6{background:#139EA2;box-shadow:0 7px 0 #0c7477}
 .t7{background:#DD5596;box-shadow:0 7px 0 #b13a74}
 .t8{background:#3B4BA8;box-shadow:0 7px 0 #27337d}
+.t9{background:#D7352B;box-shadow:0 7px 0 #a6241c;grid-column:1 / -1}
+.t9 .art svg{height:100%;width:auto;border-radius:6px;outline:3px solid #fff}
+.verse{display:flex;flex-direction:column;align-items:center;gap:2px;background:#FFF7E0;border-radius:24px;padding:14px 20px;box-shadow:0 6px 0 #F1DFA8;font-family:var(--display);font-weight:600;font-size:clamp(19px,4.6vw,26px);line-height:1.35;text-align:center;max-width:560px;text-wrap:balance}
 .lvb{display:inline-block;background:rgba(255,255,255,.28);border-radius:999px;padding:1px 10px;font-weight:800;font-size:13px;margin-bottom:6px}
 .emo-art{font-size:42px;line-height:1}
 .sil{filter:brightness(0) opacity(.6)}
@@ -184,6 +187,7 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:6;width:100%;height
       <button class="tile t6" data-game="compare"><div class="art"><span class="emo-art" style="font-size:20px">🐘</span><span class="emo-art" style="font-size:30px">🐘</span><span class="emo-art">🐘</span></div><div><h2>To – nhỏ, Nhiều – ít</h2><p>So sánh</p></div></button>
       <button class="tile t7" data-game="match"><div class="art"><span class="emo-art">🐰</span><span class="emo-art sil">🐰</span></div><div><h2>Ghép bóng &amp; Ghép cặp</h2><p>Quan sát, liên tưởng</p></div></button>
       <button class="tile t8" data-game="letters"><div class="art"><span class="numart">A b C</span></div><div><h2>Chữ cái</h2><p>Làm quen chữ</p></div></button>
+      <button class="tile t9" data-game="homeland"><div class="art" id="art9"></div><div><h2>Quê hương Việt Nam</h2><p>Câu đố, ca dao, cổ tích, anh hùng dân tộc</p></div></button>
     </div>
     <details class="tips">
       <summary>Gợi ý cho bố mẹ</summary>
@@ -195,6 +199,7 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:6;width:100%;height
         <li><b>To – nhỏ, Nhiều – ít:</b> so sánh kích thước và số lượng. 5–6 tuổi có thêm xếp từ nhỏ đến to.</li>
         <li><b>Ghép bóng &amp; Ghép cặp:</b> tìm hình khớp với cái bóng; 5–6 tuổi ghép đồ vật đi cùng nhau (mưa – ô, khóa – chìa).</li>
         <li><b>Chữ cái:</b> nghe và tìm chữ; 5–6 tuổi tìm chữ đầu của từ (“cá” bắt đầu bằng chữ C).</li>
+        <li><b>Quê hương Việt Nam:</b> biểu tượng, phong tục ngày Tết, câu đố và ca dao dân gian, truyện cổ tích, anh hùng dân tộc. Mỗi câu đúng có một câu giải thích ngắn, bố mẹ có thể kể thêm câu chuyện cho bé nghe.</li>
         <li><b>Cấp độ và nhãn dán:</b> mỗi trò có nhiều màn, làm tốt thì lên màn khó hơn. Cứ 5 sao bé mở được một nhãn dán mới trong bộ sưu tập (nút quà ở góc trên).</li>
         <li><b>Quy luật &amp; Khác biệt:</b> nền tảng của tư duy toán và suy luận. 5–6 tuổi có quy luật AAB, ABC và phân loại theo nhóm (con vật, hoa quả, xe cộ).</li>
       </ul>
@@ -421,6 +426,48 @@ const scene = (area, html) => { const d=document.createElement('div'); d.classNa
 const ltr = L => `<span class="ltr">${L.u}${L.l}</span>`;
 const findLetter = u => LETTERS.find(x=>x.u===u);
 
+/* ---------- Quê hương Việt Nam ---------- */
+const SVG_FLAG_VN = `<svg viewBox="0 0 150 100" aria-hidden="true"><rect width="150" height="100" rx="6" fill="#DA251D"/><polygon points="${starPts(75,53,32,13)}" fill="#FFDE00"/></svg>`;
+const SVG_FLAG_A = `<svg viewBox="0 0 150 100" aria-hidden="true"><rect width="150" height="100" rx="6" fill="#139EA2"/><polygon points="0,0 70,50 0,100" fill="#FFFFFF"/></svg>`;
+const SVG_FLAG_B = `<svg viewBox="0 0 150 100" aria-hidden="true"><rect width="150" height="100" rx="6" fill="#2E9E5B"/><rect y="38" width="150" height="24" fill="#F7C531"/></svg>`;
+const SVG_NONLA = `<svg viewBox="0 0 100 100" aria-hidden="true"><polygon points="50,16 94,72 6,72" fill="#EBCB82" stroke="#B88F3A" stroke-width="3" stroke-linejoin="round"/><path d="M50 16 L36 72 M50 16 L64 72 M50 16 L22 72 M50 16 L78 72" stroke="#C9A55A" stroke-width="2"/><path d="M26 72 Q50 92 74 72" fill="none" stroke="#C0392B" stroke-width="3"/></svg>`;
+const SVG_BANHCHUNG = `<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="14" y="14" width="72" height="72" rx="6" fill="#3E8E41" stroke="#2C6B2F" stroke-width="4"/><rect x="24" y="24" width="52" height="52" rx="3" fill="#5BAE5E"/><path d="M38 14 V86 M62 14 V86 M14 38 H86 M14 62 H86" stroke="#F2E3B3" stroke-width="4"/></svg>`;
+const SVG_TRE = `<svg viewBox="0 0 100 100" aria-hidden="true"><g fill="#4CAF50" stroke="#2E7D32" stroke-width="2"><rect x="22" y="10" width="12" height="84" rx="5"/><rect x="44" y="4" width="12" height="90" rx="5"/><rect x="66" y="14" width="12" height="80" rx="5"/></g><path d="M22 34h12M22 60h12M44 28h12M44 56h12M66 40h12M66 66h12" stroke="#2E7D32" stroke-width="3"/><path d="M56 20 q16 -8 26 0 q-14 6 -26 0z M34 46 q-16 -8 -26 0 q14 6 26 0z" fill="#66BB6A"/></svg>`;
+const SVG_LETTER = L => `<span class="ltr">${L}</span>`;
+const pic = e => `<span class="emo">${e}</span>`;
+const num = n => `<span class="num">${n}</span>`;
+
+/* Mỗi câu: lv 'small' (3–6 tuổi) hoặc 'big' (chỉ 5–6 tuổi). opts[0] là đáp án đúng. v = các dòng thơ/câu đố đọc trước câu hỏi. */
+const HOMELAND = [
+  {lv:'small', tag:'Biểu tượng', q:'Lá cờ Việt Nam là lá cờ nào?', say:'Lá cờ Việt Nam là lá cờ nào nhỉ?', opts:[SVG_FLAG_VN, SVG_FLAG_A, SVG_FLAG_B], fact:'Đúng rồi! Cờ Tổ quốc màu đỏ có ngôi sao vàng năm cánh.'},
+  {lv:'small', tag:'Biểu tượng', q:'Đâu là chiếc nón lá?', say:'Đâu là chiếc nón lá của Việt Nam nhỉ?', opts:[SVG_NONLA, pic('🎩'), pic('🧢')], fact:'Đúng rồi! Nón lá giúp che nắng che mưa.'},
+  {lv:'small', tag:'Làng quê', q:'Con gì giúp bác nông dân cày ruộng?', say:'Con gì giúp bác nông dân cày ruộng nhỉ?', opts:[pic('🐃'), pic('🐈'), pic('🐒')], fact:'Đúng rồi! Con trâu là bạn của nhà nông.'},
+  {lv:'small', tag:'Làng quê', q:'Cây gì cho hạt gạo nấu cơm?', say:'Cây gì cho hạt gạo để nấu cơm nhỉ?', opts:[pic('🌾'), pic('🌵'), pic('🌻')], fact:'Đúng rồi! Cây lúa cho hạt gạo trắng thơm.'},
+  {lv:'small', tag:'Ngày Tết', q:'Ngày Tết, nhà nhà gói bánh gì?', say:'Ngày Tết nhà nhà gói bánh gì nhỉ?', opts:[SVG_BANHCHUNG, pic('🍰'), pic('🍕')], fact:'Đúng rồi! Bánh chưng xanh hình vuông.'},
+  {lv:'small', tag:'Ngày Tết', q:'Bao lì xì ngày Tết là cái nào?', say:'Ngày Tết bé được mừng tuổi bằng bao lì xì nào nhỉ?', opts:[pic('🧧'), pic('✉️'), pic('📦')], fact:'Đúng rồi! Bao lì xì màu đỏ mang lại may mắn.'},
+  {lv:'small', tag:'Trung thu', q:'Tết Trung thu bé rước đèn hình gì?', say:'Tết Trung thu bé rước đèn hình gì nhỉ?', opts:[shapeSVG('star','#FFC83D'), shapeSVG('circle','#F58A2A'), shapeSVG('square','#2F7DE1')], fact:'Đúng rồi! Bé rước đèn ông sao.'},
+  {lv:'small', tag:'Câu đố', v:['Con gì mào đỏ','Sáng sớm tinh mơ','Gáy ò ó o','Gọi cả nhà dậy?'], q:'Đố bé là con gì?', say:'Đố bé là con gì?', opts:[pic('🐓'), pic('🦆'), pic('🐱')], fact:'Đúng rồi! Đó là chú gà trống.'},
+  {lv:'small', tag:'Câu đố', v:['Quả gì vỏ xanh','Ruột đỏ hạt đen','Ăn vào mát lịm?'], q:'Đố bé là quả gì?', say:'Đố bé là quả gì?', opts:[pic('🍉'), pic('🍎'), pic('🍌')], fact:'Đúng rồi! Đó là quả dưa hấu.'},
+  {lv:'small', tag:'Ca dao', v:['Con mèo mà trèo cây cau','Hỏi thăm chú chuột đi đâu vắng nhà'], q:'Con mèo trèo lên cây gì?', say:'Con mèo trèo lên cây gì nhỉ?', opts:[pic('🌴'), pic('🌳'), pic('🌵')], fact:'Đúng rồi! Con mèo trèo lên cây cau.'},
+  {lv:'small', tag:'Anh hùng', q:'Thánh Gióng cưỡi con gì đi đánh giặc?', say:'Thánh Gióng cưỡi con gì đi đánh giặc nhỉ?', opts:[pic('🐴'), pic('🐘'), pic('🐢')], fact:'Đúng rồi! Thánh Gióng cưỡi ngựa sắt đánh tan giặc Ân.'},
+  {lv:'small', tag:'Cổ tích', q:'Mai An Tiêm trồng được quả gì trên đảo?', say:'Mai An Tiêm trồng được quả gì trên đảo nhỉ?', opts:[pic('🍉'), pic('🍎'), pic('🍇')], fact:'Đúng rồi! Mai An Tiêm trồng được quả dưa hấu.'},
+  {lv:'small', tag:'Bác Hồ', q:'Bác Hồ rất yêu ai?', say:'Bác Hồ rất yêu ai nhỉ?', opts:[pic('🧒'), pic('🐯'), pic('🤖')], fact:'Đúng rồi! Bác Hồ rất yêu các cháu thiếu nhi.'},
+  {lv:'big', tag:'Câu đố dân gian', v:['Bằng cái vung','Vùng xuống ao','Đào chẳng thấy','Lấy chẳng được'], q:'Đố bé là cái gì?', say:'Đố bé là cái gì?', opts:[pic('🌕'), pic('🐟'), pic('🍲')], fact:'Đúng rồi! Đó là bóng mặt trăng dưới ao.'},
+  {lv:'big', tag:'Ca dao', v:['Trong đầm gì đẹp bằng sen','Lá xanh bông trắng lại chen nhị vàng','Nhị vàng bông trắng lá xanh','Gần bùn mà chẳng hôi tanh mùi bùn'], q:'Bài ca dao nói về hoa gì?', say:'Bài ca dao nói về hoa gì nhỉ?', opts:[pic('🪷'), pic('🌻'), pic('🌹')], fact:'Đúng rồi! Hoa sen thơm ngát trong đầm.'},
+  {lv:'big', tag:'Ca dao', v:['Công cha như núi Thái Sơn','Nghĩa mẹ như nước trong nguồn chảy ra'], q:'Công cha được ví như cái gì?', say:'Công cha được ví như cái gì nhỉ?', opts:[pic('⛰️'), pic('🌊'), pic('🌳')], fact:'Đúng rồi! Công cha to lớn như núi cao.'},
+  {lv:'big', tag:'Ca dao', v:['Cày đồng đang buổi ban trưa','Mồ hôi thánh thót như mưa ruộng cày'], q:'Bác nông dân đang làm gì?', say:'Bác nông dân đang làm gì nhỉ?', opts:[pic('🐃'), pic('🎣'), pic('⚽')], fact:'Đúng rồi! Bác nông dân đang cày ruộng, vất vả lắm.'},
+  {lv:'big', tag:'Anh hùng', q:'Roi sắt gãy, Thánh Gióng nhổ cây gì đánh giặc?', say:'Roi sắt gãy, Thánh Gióng nhổ cây gì để đánh giặc nhỉ?', opts:[SVG_TRE, pic('🌻'), pic('🌵')], fact:'Đúng rồi! Gióng nhổ những bụi tre bên đường.'},
+  {lv:'big', tag:'Anh hùng', q:'Hai Bà Trưng cưỡi con gì ra trận?', say:'Hai Bà Trưng cưỡi con gì ra trận nhỉ?', opts:[pic('🐘'), pic('🐴'), pic('🐃')], fact:'Đúng rồi! Hai Bà Trưng cưỡi voi đánh giặc giữ nước.'},
+  {lv:'big', tag:'Anh hùng', q:'Vua Lê Lợi trả gươm thần cho con vật nào?', say:'Vua Lê Lợi trả gươm thần cho con vật nào nhỉ?', opts:[pic('🐢'), pic('🐟'), pic('🦆')], fact:'Đúng rồi! Rùa Vàng nhận lại gươm ở hồ Hoàn Kiếm.'},
+  {lv:'big', tag:'Anh hùng', q:'Ngô Quyền cắm gì xuống sông Bạch Đằng?', say:'Ngô Quyền cắm gì xuống sông Bạch Đằng để thắng giặc nhỉ?', opts:[pic('🪵'), pic('🌸'), pic('🎈')], fact:'Đúng rồi! Cọc gỗ nhọn làm thuyền giặc mắc kẹt.'},
+  {lv:'big', tag:'Cổ tích', q:'Mẹ Âu Cơ sinh ra bọc bao nhiêu trứng?', say:'Mẹ Âu Cơ sinh ra một bọc bao nhiêu trứng nhỉ?', opts:[num(100), num(10), num(2)], fact:'Đúng rồi! Một trăm trứng nở ra một trăm người con.'},
+  {lv:'big', tag:'Cổ tích', q:'Sơn Tinh là vị thần của gì?', say:'Sơn Tinh là vị thần của gì nhỉ?', opts:[pic('⛰️'), pic('🌊'), pic('🔥')], fact:'Đúng rồi! Sơn Tinh là thần núi, Thủy Tinh là thần nước.'},
+  {lv:'big', tag:'Cổ tích', q:'Lang Liêu làm bánh chưng hình gì?', say:'Lang Liêu làm bánh chưng hình gì nhỉ?', opts:[shapeSVG('square','#3E8E41'), shapeSVG('circle','#F2E3B3'), shapeSVG('triangle','#3E8E41')], fact:'Đúng rồi! Bánh chưng hình vuông, bánh giầy hình tròn.'},
+  {lv:'big', tag:'Đất nước', q:'Đất nước Việt Nam có hình chữ gì?', say:'Đất nước Việt Nam cong cong có hình chữ gì nhỉ?', opts:[SVG_LETTER('S'), SVG_LETTER('O'), SVG_LETTER('C')], fact:'Đúng rồi! Việt Nam có hình chữ S.'},
+  {lv:'big', tag:'Đất nước', q:'Ngôi sao trên cờ Việt Nam có mấy cánh?', say:'Ngôi sao trên lá cờ Việt Nam có mấy cánh nhỉ?', opts:[num(5), num(3), num(6)], fact:'Đúng rồi! Ngôi sao vàng có năm cánh.'}
+];
+let HL_DECK = [];
+
 /* ---------- games ---------- */
 const GAMES = {
   colors: { title:'Màu sắc & Hình khối', total:5, make(age, r, lv){
@@ -616,6 +663,24 @@ const GAMES = {
     const set = sample(LETTERS.slice(0,poolSize), n), t = set[0];
     const opts = set.map((L,i)=>({html:ltr(L), correct:i===0, label:'chữ '+L.n}));
     return { text:`Tìm chữ ${t.u}`, say:`Bé tìm chữ ${t.n} nhé!`, render(a){ options(a, shuffle(opts)); } };
+  }},
+
+  homeland: { title:'Quê hương Việt Nam', total:5, make(age, r, lv){
+    if(r===0 || !HL_DECK.length){
+      const pool = HOMELAND.filter(x=> age==='big' || x.lv==='small');
+      const seen = load('bvh_hl_seen_'+age, []);
+      const fresh = pool.filter(x=>!seen.includes(x.q)), old = pool.filter(x=>seen.includes(x.q));
+      HL_DECK = [...shuffle(fresh), ...shuffle(old)];
+    }
+    const it = HL_DECK.shift();
+    const seen = load('bvh_hl_seen_'+age, []); if(!seen.includes(it.q)){ seen.push(it.q); save('bvh_hl_seen_'+age, seen.length >= HOMELAND.length ? [] : seen); }
+    const opts = it.opts.map((html,i)=>({html, correct:i===0, praise: i===0 ? it.fact : null, voice: i===0 ? it.fact : null}));
+    return { text: it.q, say: it.v ? [...it.v, it.say] : it.say, sub: it.tag,
+      render(a){
+        if(it.v){ const d=document.createElement('div'); d.className='verse'; d.innerHTML = it.v.map(l=>`<span>${l}</span>`).join(''); a.appendChild(d); }
+        options(a, shuffle(opts));
+      }
+    };
   }}
 };
 
@@ -738,6 +803,7 @@ $('#back').onclick=goHome; $('#toHome').onclick=goHome; $('#again').onclick=()=>
 $('#say').onclick=()=>{ if(S.cur) speak(S.cur.say); };
 $('#starIcon').innerHTML=STAR(); $('#bank').textContent=S.bank; setAge(S.age);
 $('#art1').innerHTML=shapeSVG('circle','#FFC83D')+shapeSVG('triangle','#fff')+shapeSVG('square','#22305C');
+$('#art9').innerHTML=SVG_FLAG_VN+'<span class="emo-art">🪷</span><span class="emo-art">🐃</span><span class="emo-art">🌾</span>';
 $('#art4').innerHTML=shapeSVG('star','#FFC83D')+shapeSVG('heart','#fff')+shapeSVG('star','#FFC83D')+shapeSVG('heart','#fff');
 
 /* for building the voice script */
@@ -747,6 +813,7 @@ window.BVH_ALL_LINES = function(){
   ['Chạm vào hình to nhất nhé!','Chạm vào hình nhỏ nhất nhé!','Nhóm nào nhiều hơn nhỉ?','Nhóm nào ít hơn nhỉ?','Bé chạm từ hình nhỏ nhất đến hình to nhất nhé!',
    'Bé tìm hình giống với cái bóng nhé!','Cái gì đi cùng với hình này nhỉ?', LVUP_SAY, STK_SAY, ALBUM_SAY].forEach(x=>L.add(x));
   LETTERS.forEach(x=>L.add(`Bé tìm chữ ${x.n} nhé!`)); WORDS.forEach(w=>L.add(`${cap(w.w)} bắt đầu bằng chữ gì nhỉ?`));
+  HOMELAND.forEach(x=>{ (x.v||[]).forEach(l=>L.add(l)); L.add(x.say); L.add(x.fact); });
   COUNT_ITEMS.forEach(x=>L.add(`Có bao nhiêu ${x.n} nhỉ?`)); ANIMALS.forEach(x=>L.add(cap(x.n)));
   return [...L].filter(x=>!CLIPS[x]);
 };
