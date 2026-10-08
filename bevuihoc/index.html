@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Game giáo dục cho bé 3–6 tuổi: màu sắc, hình khối, đếm số, trí nhớ, tư duy logic, tiếng kêu con vật, so sánh, ghép hình, chữ cái.">
+<meta name="author" content="Hà Trọng Thủy">
 <title>Bé Vui Học</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -76,6 +77,9 @@ button:focus-visible{outline:4px solid var(--sea);outline-offset:3px}
 .minicard{width:40px;height:54px;border-radius:9px;background:#fff;display:grid;place-items:center;font-size:26px;box-shadow:0 3px 0 rgba(0,0,0,.18)}
 .minicard.back{background:repeating-linear-gradient(45deg,#ffd76a 0 6px,#ffc83d 6px 12px)}
 details.tips{flex:none;margin-top:18px;background:var(--paper);border-radius:20px;padding:12px 16px;box-shadow:0 4px 0 var(--line)}
+footer.credit{flex:none;margin-top:16px;text-align:center;font-size:14px;font-weight:700;color:var(--mute);line-height:1.6}
+footer.credit b{color:var(--ink)}
+footer.credit .mail{user-select:text;-webkit-user-select:text;color:var(--sea);white-space:nowrap}
 details.tips summary{font-weight:800;cursor:pointer}
 .tips ul{margin:10px 0 4px;padding-left:20px;display:grid;gap:6px;max-width:65ch;line-height:1.45}
 .tips li b{color:var(--ink)}
@@ -205,6 +209,7 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:6;width:100%;height
       </ul>
       <p>Mỗi lượt chơi chỉ 3–6 câu, khoảng 3–5 phút. Chơi cùng bé, hỏi “Vì sao con chọn hình này?” để bé tập diễn đạt. Trả lời sai không bị trừ điểm, bé được thử lại. Bấm Đổi tên để nhập tên bé và ghi âm giọng bố mẹ gọi tên, game sẽ gọi bé bằng giọng đó. Vài câu chưa thu sẵn sẽ dùng giọng đọc của máy, chọn ở mục Giọng đọc.</p>
     </details>
+    <footer class="credit">© 2026 Bé Vui Học · Tác giả: <b>Hà Trọng Thủy</b><br>Góp ý: <span class="mail">booha061294@gmail.com</span></footer>
   </section>
 
   <section class="screen" id="play" hidden>
