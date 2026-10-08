@@ -380,12 +380,13 @@ if('speechSynthesis' in window){ loadVoices(); speechSynthesis.onvoiceschanged =
 const CLIPS = window.BVH_CLIPS || {}; const player = new Audio(); player.preload = 'auto'; let speakToken = null;
 let NAME = load('bvh_name',''), NAME_AUDIO = load('bvh_name_audio',''), greeted = false;
 const cap = w => w.charAt(0).toUpperCase() + w.slice(1);
-function stopSpeak(){ speakToken = null; try{ player.onended=null; player.onerror=null; player.pause(); }catch(e){} try{ speechSynthesis.cancel(); }catch(e){} }
-function speak(t){
-  if(!soundOn) return;
+let speakDone = null;
+function stopSpeak(){ speakToken = null; if(speakDone){ const d=speakDone; speakDone=null; d(); } try{ player.onended=null; player.onerror=null; player.pause(); }catch(e){} try{ speechSynthesis.cancel(); }catch(e){} }
+function speak(t){ return new Promise(resolve => {
+  if(!soundOn){ resolve(); return; }
   const list = Array.isArray(t) ? t : [t];
   stopSpeak();
-  const token = {}; speakToken = token;
+  const token = {}; speakToken = token; speakDone = resolve;
   const playSrc = (src) => {
     player.onended = () => { if(speakToken===token) next(); };
     player.onerror = () => { if(speakToken===token) next(); };
@@ -393,14 +394,15 @@ function speak(t){
     const p = player.play(); if(p && p.catch) p.catch(err => { if(speakToken===token && err && err.name!=='AbortError') next(); });
   };
   let i=0; const next=()=>{
-    if(speakToken!==token || i>=list.length) return;
+    if(speakToken!==token) return;
+    if(i>=list.length){ speakDone=null; resolve(); return; }
     const item=list[i++];
     if(item==='@name'){ if(NAME_AUDIO) playSrc(NAME_AUDIO); else next(); return; }
     if(CLIPS[item]) playSrc(CLIPS[item]);
     else ttsSpeak(item, () => { if(speakToken===token) next(); });
   };
   next();
-}
+}); }
 function ttsSpeak(t, done){
   if(!('speechSynthesis' in window)){ if(done) done(); return; }
   try{ const u=new SpeechSynthesisUtterance(t); u.lang='vi-VN'; if(viVoice) u.voice=viVoice; u.rate=.9; u.pitch=isMale(viVoice)?1.4:1.1; if(done){ u.onend=done; u.onerror=done; } speechSynthesis.speak(u);}catch(e){ if(done) done(); }
@@ -707,7 +709,7 @@ const GAMES = {
 /* ---------- flow ---------- */
 function dots(){ const d=$('#dots'); d.innerHTML=''; for(let i=0;i<S.total;i++){const e=document.createElement('span'); e.className='dot'+(i<S.round?' done':i===S.round?' now':''); d.appendChild(e);} }
 function start(id){
-  S.game=id; S.round=0; S.stars=0; S.total=GAMES[id].total; S.lv=getLv(id,S.age);
+  S.playId=(S.playId||0)+1; S.game=id; S.round=0; S.stars=0; S.total=GAMES[id].total; S.lv=getLv(id,S.age);
   $('#home').hidden=true; $('#play').hidden=false; $('#done').hidden=true;
   $('#gtitle').textContent=`${GAMES[id].title} · Màn ${S.lv}`; S.greet = !greeted && !!NAME_AUDIO; greeted = true; next();
 }
@@ -723,8 +725,13 @@ function answer(ok, el, praise, voice){
   if(ok){
     S.busy=true; if(el) el.classList.add('right'); sndGood();
     if(S.first) S.stars++;
-    const p = praise || pick(PRAISE); $('#sub').textContent = (NAME && !praise) ? p.replace(/!$/,'') + ', ' + NAME + '!' : p; speak(voice || pick(PRAISE)); burst(30);
-    S.round++; setTimeout(next, praise?2200:1500);
+    const p = praise || pick(PRAISE); $('#sub').textContent = (NAME && !praise) ? p.replace(/!$/,'') + ', ' + NAME + '!' : p; burst(30);
+    S.round++;
+    /* chờ bé nghe hết lời khen / lời giải thích rồi mới sang câu mới, để không bị đè tiếng */
+    const play = S.playId, t0 = Date.now(); let moved = false;
+    const go = () => { if(moved || play !== S.playId) return; moved = true; next(); };
+    speak(voice || pick(PRAISE)).then(() => setTimeout(go, Math.max(500, 1300 - (Date.now() - t0))));
+    setTimeout(go, 12000);
   } else {
     S.first=false; if(el) el.classList.add('wrong'); sndBad(); const t=pick(TRY); $('#sub').textContent=t; speak(t);
   }
@@ -750,7 +757,7 @@ function finish(){
   speak(say); burst(120); if(gotStk || lvUp) setTimeout(sndFanfare, 300);
   refreshHome();
 }
-function goHome(){ stopSpeak(); $('#done').hidden=true; $('#play').hidden=true; $('#home').hidden=false; refreshHome(); }
+function goHome(){ S.playId=(S.playId||0)+1; stopSpeak(); $('#done').hidden=true; $('#play').hidden=true; $('#home').hidden=false; refreshHome(); }
 
 /* ---------- album ---------- */
 function openAlbum(){
